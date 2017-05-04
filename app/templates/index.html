@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Flask论坛{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>你好，{%  if name %}{{ name }}{% else %}Stranger{% endif %}!</h1>
+    {% if not known %}
+    <p>很高兴认识你!</p>
+    {% else %}
+    <p>再次遇见你真好！</p>
+    {% endif %}
+</div>
+
+{{ wtf.quick_form(form) }}
+
+<p>当地时间: {{ moment(current_time).format('LLL') }}.</p>
+<p>上一次访问: {{ moment(current_time).fromNow(refresh=True) }}</p>
+{% endblock %}
+
