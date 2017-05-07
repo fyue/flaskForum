@@ -1,6 +1,8 @@
-import unittest
+import unittest, time
 from app.models import User
 from app import create_app, db
+from app.auth.views import confirm
+from click.decorators import password_option
 
 class UserModelTestCase(unittest.TestCase):
     def setUp(self):
@@ -32,3 +34,51 @@ class UserModelTestCase(unittest.TestCase):
         u1 = User(password = "cat")
         u2 = User(password = "cat")
         self.assertTrue(u2.password_hash !=u1.password_hash)
+        
+    def test_valid_confirmation_token(self):
+        u = User(password = "cat")
+        db.session.add(u)
+        db.session.commit()
+        token = u.generate_confirmation_token()
+        self.assertTrue(u.confirm(token))
+        
+    def test_invalid_confirmation_token(self):
+        u1 = User(password = "cat")
+        u2 = User(password = "dog")
+        db.session.add(u1)
+        db.session.add(u2)
+        db.session.commit()
+        token1 = u1.generate_confirmation_token()
+        self.assertFalse(u2.confirm(token1))
+        
+    def test_expired_confirmation_token(self):
+        u = User(password = "cat")
+        db.session.add(u)
+        db.session.commit()
+        token = u.generate_confirmation_token(expiration = 1)
+        time.sleep(2)
+        self.assertFalse(u.confirm(token))
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            
+        
+        
+        
+        
+        
+        
