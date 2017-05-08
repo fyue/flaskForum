@@ -24,5 +24,20 @@ class RegistrationForm(FlaskForm):
         if User.query.filter_by(email=field.data).first():
             raise ValidationError("邮箱已被注册，请尝试其他邮箱")
         
-    
+    def validate_username(self, field):
+        if User.query.filter_by(username=field.data):
+            raise ValidationError("用户名已被使用，请尝试其他用户名")
+        
+class ChangePasswordForm(FlaskForm):
+    old_password = PasswordField("請输入旧密码：", validators=[Required()])
+    password = PasswordField("请输入新密码", validators=[Required()])
+    password2 = PasswordField("请再一次输入新密码", validators=[Required(), \
+                             EqualTo("password", message = "密码需要一致")])
+    submit = SubmitField("修改密码")
+        
+        
+        
+        
+        
+        
         
