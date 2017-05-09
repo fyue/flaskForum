@@ -35,7 +35,7 @@ class ChangePasswordForm(FlaskForm):
                              EqualTo("password", message = "两次密码需要一致")])
     submit = SubmitField("修改密码")
         
-"""Reset Email begin"""
+"""Reset passwd begin"""
 class PasswordResetRequestForm(FlaskForm):
     email = StringField("請输入需要重置密码的邮箱：", validators=[Required(), 
                                                  Length(1, 64), Email()])
@@ -52,7 +52,23 @@ class PasswordResetForm(FlaskForm):
     def validate_email(self, field):
         if User.query.filter_by(email = field.data).first() is None:
             raise ValidationError("未知邮箱地址！")
-"""Reset Email end"""
+"""Reset passwd end"""
+        
+        
+"""Reset Email begin"""        
+class ChangeEmailForm(FlaskForm):
+    email = StringField("新邮箱：", validators=[Required(), Length(1, 64), Email()])
+    password = PasswordField("密码：", validators=[Required()])
+    submit = SubmitField("修改邮箱地址")
+    
+    def validate_email(self, field):
+        if User.query.filter_by(email = field.data).first():
+            raise ValidationError("邮箱地址已存在.")
+        
+        
+        
+        
+        
         
         
         
