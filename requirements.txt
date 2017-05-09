@@ -14,4 +14,6 @@ WTForms
 Werkzeug
 alembic
 blinker
+click
 itsdangerous
+python-editor

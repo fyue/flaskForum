@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Flask论坛 - 验证您的账户{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>
+        你好, {{ current_user.username }}!
+    </h1>
+    <h3>您还没有验证您的账户.</h3>
+    <p>
+        您需要验证您的账户后才可以访问该网站.
+        查看您的邮箱,你应该已经收到了一封验证邮件.
+    </p>
+    <p>
+        需要再发送一次验证邮件吗？
+        点击<a href="{{ url_for("auth.resend_confirmation") }}">这里</a>
+    </p>
+</div>
+{% endblock %}
