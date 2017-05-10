@@ -1,9 +1,25 @@
 {% extends "base.html" %}
 
-{% block title %}我的Flask论坛{%endblock%}
+{% block title %}Flask论坛 - {{ user.username }}{% endblock %}
 
 {% block page_content %}
 <div class="page-header">
-    <h1>你好, {{name}}!</h1>
+    <h1>{{ user.username }}</h1>
+    {% if user.name or user.location %}
+    <p>
+        {% if user.name %}{{ user.name }}{% endif %}
+        {% if user.location %}
+            来自<a href="http://maps.google.com/?={{ user.location }}">{{ user.location }}</a>
+        {% endif %}
+    </p>
+    {% endif %}
+    {% if current_user.is_administrator() %}
+    <p><a href="mailto:{{ user.email }}">{{ user.email }}</a></p>
+    {% endif %}
+    {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
+    <p>
+        注册时间: {{ moment(user.member_since).format("L") }}.
+        最后一次访问： {{ moment(user.last_seen).fromNow() }}.
+    </p>
 <div>
 {% endblock %}
