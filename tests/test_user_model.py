@@ -1,5 +1,5 @@
 import unittest, time
-from app.models import User
+from app.models import User, Role, AnonymousUser, Permissions
 from app import create_app, db
 from app.auth.views import confirm
 from click.decorators import password_option
@@ -10,6 +10,7 @@ class UserModelTestCase(unittest.TestCase):
         self.app_context = self.app.app_context()
         self.app_context.push()
         db.create_all()
+        Role.insert_roles()
     
     def tearDown(self):
         db.session.remove()
@@ -106,9 +107,16 @@ class UserModelTestCase(unittest.TestCase):
         self.assertFalse(u1.change_email(token))
         self.assertTrue(u1.email == "john@example.com")
         
+    """test role ralative functions"""
+    def test_roles_and_permissions(self):
+        u = User(email = "john@example.com", password="cat")
+        self.assertTrue(u.can(Permissions.WRITE_ARTICLES))
+        self.assertFalse(u.can(Permissions.MODERATE_COMMENTS))
         
-        
-        
+    def test_anonymous_user(self):
+        u = AnonymousUser()
+        self.assertFalse(u.can(Permissions.FOLLOW))
+
         
         
         
