@@ -25,7 +25,7 @@ class RegistrationForm(FlaskForm):
             raise ValidationError("邮箱已被注册，請尝试其他邮箱")
         
     def validate_username(self, field):
-        if User.query.filter_by(username=field.data):
+        if User.query.filter_by(username=field.data).first():
             raise ValidationError("用户名已被使用，請尝试其他用户名")
         
 class ChangePasswordForm(FlaskForm):

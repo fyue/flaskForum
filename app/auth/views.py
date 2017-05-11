@@ -34,9 +34,9 @@ def logout():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(email=form.email.data,
-                    username = form.username.data,
-                    password=form.password.data)
+        user = User(email=form.email.data, 
+                    username = form.username.data, 
+                    password = form.password.data)
         db.session.add(user)
         db.session.commit()
         token = user.generate_confirmation_token()
@@ -153,24 +153,17 @@ def change_email(token):
         flash("无效请求.")
     return redirect(url_for("main.index"))    
     
-    
-    
-    
-    
-    
-    
-    
 
 
 @auth.before_app_request
 def before_request():
-    if current_user.is_authenticated \
-            and not current_user.confirmed \
-            and request.endpoint \
-            and request.endpoint[:5] != "auth." \
-            and request.endpoint != "static":
-        return redirect(url_for("auth.unconfirmed"))
-
+    if current_user.is_authenticated:
+        current_user.ping()
+        if not current_user.confirmed \
+                and request.endpoint \
+                and request.endpoint[:5] != "auth." \
+                and request.endpoint != "static":
+            return redirect(url_for("auth.unconfirmed"))
 
 
 

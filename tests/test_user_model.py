@@ -1,5 +1,6 @@
 import unittest, time
-from app.models import User
+from datetime import datetime
+from app.models import User, Role, AnonymousUser, Permissions
 from app import create_app, db
 from app.auth.views import confirm
 from click.decorators import password_option
@@ -10,6 +11,7 @@ class UserModelTestCase(unittest.TestCase):
         self.app_context = self.app.app_context()
         self.app_context.push()
         db.create_all()
+        Role.insert_roles()
     
     def tearDown(self):
         db.session.remove()
@@ -106,10 +108,49 @@ class UserModelTestCase(unittest.TestCase):
         self.assertFalse(u1.change_email(token))
         self.assertTrue(u1.email == "john@example.com")
         
+    """test role ralative functions"""
+    def test_roles_and_permissions(self):
+        u = User(email = "john@example.com", password="cat")
+        self.assertTrue(u.can(Permissions.WRITE_ARTICLES))
+        self.assertFalse(u.can(Permissions.MODERATE_COMMENTS))
         
+    def test_anonymous_user(self):
+        u = AnonymousUser()
+        self.assertFalse(u.can(Permissions.FOLLOW))
+
+    def test_timestamps(self):
+        u = User(password = "cat")
+        db.session.add(u)
+        db.session.commit()
+        self.assertTrue((datetime.utcnow() - u.member_since).total_seconds() < 1)
+        self.assertTrue((datetime.utcnow() - u.last_seen).total_seconds() < 1)
         
-        
-        
+    def test_ping(self):
+        u = User(password = "cat")
+        db.session.add(u)
+        db.session.commit()
+        time.sleep(2)
+        last_seen_before = u.last_seen
+        u.ping()
+        self.assertTrue(u.last_seen > last_seen_before)
+    
+    def test_gravatar(self):
+        u = User(email='john@example.com', password='cat')
+        with self.app.test_request_context('/'):
+            gravatar = u.gravatar()
+            gravatar_256 = u.gravatar(size=256)
+            gravatar_pg = u.gravatar(rating='pg')
+            #gravatar_retro = u.gravatar(default='retro')
+        with self.app.test_request_context('/', base_url='https://example.com'):
+            gravatar_ssl = u.gravatar()
+        self.assertTrue('http://www.gravatar.com/avatar/' +
+                        'd4c74594d841139328695756648b6bd6'in gravatar)
+        self.assertTrue('s=256' in gravatar_256)
+        self.assertTrue('r=pg' in gravatar_pg)
+        #self.assertTrue('d=retro' in gravatar_retro)
+        self.assertTrue('https://secure.gravatar.com/avatar/' +
+                        'd4c74594d841139328695756648b6bd6' in gravatar_ssl)
+
         
         
             
