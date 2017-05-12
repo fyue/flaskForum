@@ -9,6 +9,10 @@ class NameForm(FlaskForm):
     name = StringField("你的名字:", validators=[Required()])
     submit = SubmitField("提交")
     
+class PostForm(FlaskForm):
+    body = TextAreaField("写点什么吧？", validators=[Required()])
+    submit = SubmitField("提交")
+    
 class EditProfileForm(FlaskForm):
     name = StringField("真实姓名", validators=[Length(0, 64)])
     location = StringField("所在地", validators=[Length(0, 64)])
