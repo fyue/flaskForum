@@ -21,7 +21,7 @@ ul.posts li.post {
     border-bottom: 1px solid #e0e0e0;
 }
 ul.posts li.post:hover {
-    background-color: #f0f0f0;
+    background-color: #8E388E;
 }
 div.post-date {
     float: right;
@@ -34,6 +34,10 @@ div.post-thumbnail {
 }
 div.post-content {
     margin-left: 48px;
-    min-height:48px;
+    min-height: 48px;
+    /.background-color: red;./
+}
+body {
+    background-color: #F0FFFF;
 }
 
