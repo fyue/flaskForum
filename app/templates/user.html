@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import "_macros.html" as macros %}
 
 {% block title %}Flask论坛 - {{ user.username }}{% endblock %}
 
@@ -36,4 +37,9 @@
 </div>
 <h3>{{user.username}}发表的文章:</h3>
 {% include "_posts.html" %}
+{% if pagination %}
+<div class="pagination">
+    {{ macros.pagination_widget(pagination, ".user", username=user.username) }}
+</div>
+{% endif %}
 {% endblock %}

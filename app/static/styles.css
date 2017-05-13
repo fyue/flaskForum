@@ -37,7 +37,14 @@ div.post-content {
     min-height: 48px;
     /.background-color: red;./
 }
+div.pagination {
+    width: 100%;
+    text-align: center;
+    padding: 0px;
+    margin: 0px;
+}
 body {
     background-color: #F0FFFF;
 }
+
 
