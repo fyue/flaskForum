@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm # The class Form has been renamed with FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, BooleanField, SelectField
 from wtforms import ValidationError
 from wtforms.validators import Required, Length, Email, Regexp
+from flask_pagedown.fields import PageDownField
 from ..models import User, Role
 
 
@@ -10,7 +11,7 @@ class NameForm(FlaskForm):
     submit = SubmitField("提交")
     
 class PostForm(FlaskForm):
-    body = TextAreaField("写点什么吧？", validators=[Required()])
+    body = PageDownField("写点什么吧？", validators=[Required()])
     submit = SubmitField("提交")
     
 class EditProfileForm(FlaskForm):
