@@ -1,6 +1,6 @@
 import unittest, time
 from datetime import datetime
-from app.models import User, Role, AnonymousUser, Permissions
+from app.models import User, Role, AnonymousUser, Permissions, Follow
 from app import create_app, db
 from app.auth.views import confirm
 from click.decorators import password_option
@@ -150,8 +150,41 @@ class UserModelTestCase(unittest.TestCase):
         #self.assertTrue('d=retro' in gravatar_retro)
         self.assertTrue('https://secure.gravatar.com/avatar/' +
                         'd4c74594d841139328695756648b6bd6' in gravatar_ssl)
+    def test_follows(self):
+        u1 = User(email='john@example.com', password='cat')
+        u2 = User(email='susan@example.org', password='dog')
 
-        
+        db.session.add(u1)
+        db.session.add(u2)
+        db.session.commit()
+        self.assertFalse(u1.is_following(u2))
+        self.assertFalse(u1.is_followed_by(u2))
+        u1.follow(u2)
+        db.session.add(u1)
+        db.session.commit()
+        self.assertTrue(u1.is_following(u2))
+        self.assertFalse(u1.is_followed_by(u2))
+        self.assertTrue(u2.is_followed_by(u1))
+        self.assertTrue(u1.followed.count() == 1)
+        self.assertTrue(u2.followers.count() == 1)
+        f = u1.followed.all()[-1]
+        self.assertTrue(f.followed == u2)
+        f = u2.followers.all()[-1]
+        self.assertTrue(f.follower == u1)
+        u1.unfollow(u2)
+        db.session.add(u1)
+        db.session.commit()
+        self.assertTrue(u1.followed.count() == 0)
+        self.assertTrue(u2.followers.count() == 0)
+        self.assertTrue(Follow.query.count() == 0)
+        u2.follow(u1)
+        db.session.add(u1)
+        db.session.add(u2)
+        db.session.commit()
+        db.session.delete(u2)
+        db.session.commit()
+        self.assertTrue(Follow.query.count() == 0)
+
         
             
         
