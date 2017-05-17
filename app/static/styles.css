@@ -6,7 +6,7 @@
     margin-left:280px;
 }
 .navbar-backcolor {
-    background-color: #666;
+    background-color: #deb887;
     border-color: #080808;
 }
 
@@ -21,7 +21,7 @@ ul.posts li.post {
     border-bottom: 1px solid #e0e0e0;
 }
 ul.posts li.post:hover {
-    background-color: #8E388E;
+    background-color: #E066FF;
 }
 div.post-date {
     float: right;
@@ -74,4 +74,13 @@ div.flask-pagedown-preview h3 {
 div.post-footer {
     text-align: right;
 }
-
+.table.followers tr {
+    border-bottom: 1px solid #e0e0e0;
+}
+div.post-tabs {
+    margin-top: 16px;
+}
+div.post-tabs ul.posts {
+    margin: 0px;
+    border-top: none;
+}

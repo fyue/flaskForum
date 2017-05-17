@@ -96,7 +96,7 @@ class User(UserMixin, db.Model):
                 self.role = Role.query.filter_by(default = True).first()
         if self.email is not None and self.avatar_hash is None:
             self.avatar_hash = hashlib.md5(self.email.encode("utf-8")).hexdigest()
-        
+        self.follow(self)
     """Password and Verify"""
     @property
     def password(self):
@@ -196,16 +196,21 @@ class User(UserMixin, db.Model):
     
     def follow(self, user):
         if not self.is_following(user):
-            f = Follow(followed = user)
-            self.followed.append(f)
+            f = Follow(follower = self, followed = user)
+            db.session.add(f)
             
     def unfollow(self, user):
         f = self.followed.filter_by(followed_id = user.id).first()
         if f:
-            self.followed.remove(f)
+            db.session.delete(f)
     
     def is_followed_by(self, user):
         return self.followers.filter_by(follower_id = user.id).first() is not None
+    
+    @property
+    def followed_posts(self):
+        return Post.query.join(Follow, Follow.followed_id == Post.author_id)\
+                         .filter(Follow.follower_id == self.id)
     
     @staticmethod
     def generate_fake(count=100):
@@ -227,7 +232,14 @@ class User(UserMixin, db.Model):
                 db.session.commit()
             except IntegrityError:
                 db.session.rollback()
-        
+                
+    @staticmethod
+    def add_self_follows():
+        for user in User.query.all():
+            if not user.is_following(user):
+                user.follow(user)
+                db.session.add(user)
+                db.session.commit()    
 
     def __repr__(self):
         return "<User %r>" %(self.username)
@@ -273,9 +285,8 @@ class Post(db.Model):
                      timestamp = forgery_py.date.date(True),author = u)
             db.session.add(p)
             db.session.commit()
-
-            
-
+       
+                
 db.event.listen(Post.body, "set", Post.on_changed_body)
     
 """the callable func to load user"""
