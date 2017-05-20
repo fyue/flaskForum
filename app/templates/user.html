@@ -24,7 +24,8 @@
 	        注册时间: {{ moment(user.member_since).format("L") }}.
 	        最后一次访问： {{ moment(user.last_seen).fromNow() }}.
 	    </p>
-	    <p>{{ user.username }}有{{ user.posts.count() }}篇文章.</p>
+	    <p>{{ user.username }}有{{ user.posts.count() }}篇文章，
+	        发表了{{ user.comments.count() }}篇评论.</p>
 	    <p>
 	        {% if current_user.can(Permissions.FOLLOW) and current_user != user %}
 	            {% if not current_user.is_following(user) %}

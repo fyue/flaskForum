@@ -34,6 +34,11 @@
                     <span class="label label-danger">编辑[ADMIN]</span>
                 </a>
                 {% endif %}
+                <a href="{{ url_for(".post", id=post.id) }}#comments">
+                    <span class="label label-primary">
+                        {{ post.comments.count() }}条评论
+                    </span>
+                </a>
             </div>
         </div>
     </li>

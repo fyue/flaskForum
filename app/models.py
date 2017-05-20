@@ -75,6 +75,7 @@ class User(UserMixin, db.Model):
     last_seen = db.Column(db.DateTime(), default = datetime.utcnow)
     avatar_hash = db.Column(db.String(32))
     posts = db.relationship("Post", backref = "author", lazy = "dynamic")
+    comments = db.relationship("Comment", backref = "author", lazy = "dynamic")
     followed = db.relationship("Follow",
                                foreign_keys = [Follow.follower_id],
                                backref = db.backref("follower", lazy = "joined"),
@@ -85,7 +86,38 @@ class User(UserMixin, db.Model):
                                 backref = db.backref("followed", lazy = "joined"),
                                 lazy = "dynamic",
                                 cascade = "all, delete-orphan")
+
+    
+    @staticmethod
+    def generate_fake(count=100):
+        from sqlalchemy.exc import IntegrityError
+        from random import seed
+        import forgery_py
         
+        seed()
+        for i in range(count):
+            u = User(email = forgery_py.internet.email_address(),
+                     username = forgery_py.internet.user_name(True),
+                     password = forgery_py.lorem_ipsum.word(),
+                     confirmed = True,
+                     name = forgery_py.name.full_name(),
+                     location = forgery_py.address.city(),
+                     about_me = forgery_py.lorem_ipsum.sentence(),
+                     member_since = forgery_py.date.date(True))
+            db.session.add(u)
+            try:
+                db.session.commit()
+            except IntegrityError:
+                db.session.rollback()
+                
+    @staticmethod
+    def add_self_follows():
+        for user in User.query.all():
+            if not user.is_following(user):
+                user.follow(user)
+                db.session.add(user)
+                db.session.commit()            
+
     """init Role for users"""
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -96,7 +128,7 @@ class User(UserMixin, db.Model):
                 self.role = Role.query.filter_by(default = True).first()
         if self.email is not None and self.avatar_hash is None:
             self.avatar_hash = hashlib.md5(self.email.encode("utf-8")).hexdigest()
-        self.follow(self)
+        self.followed.append(Follow(followed=self))
     """Password and Verify"""
     @property
     def password(self):
@@ -211,35 +243,6 @@ class User(UserMixin, db.Model):
     def followed_posts(self):
         return Post.query.join(Follow, Follow.followed_id == Post.author_id)\
                          .filter(Follow.follower_id == self.id)
-    
-    @staticmethod
-    def generate_fake(count=100):
-        from sqlalchemy.exc import IntegrityError
-        from random import seed
-        import forgery_py
-        
-        seed()
-        for i in range(count):
-            u = User(email = forgery_py.internet.email_address(),
-                     username = forgery_py.internet.user_name(True),
-                     password = forgery_py.lorem_ipsum.word(),
-                     confirmed = True,
-                     name = forgery_py.name.full_name(),
-                     location = forgery_py.address.city(),
-                     member_since = forgery_py.date.date(True))
-            db.session.add(u)
-            try:
-                db.session.commit()
-            except IntegrityError:
-                db.session.rollback()
-                
-    @staticmethod
-    def add_self_follows():
-        for user in User.query.all():
-            if not user.is_following(user):
-                user.follow(user)
-                db.session.add(user)
-                db.session.commit()    
 
     def __repr__(self):
         return "<User %r>" %(self.username)
@@ -262,7 +265,8 @@ class Post(db.Model):
     timestamp = db.Column(db.DateTime, index = True, default = datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     body_html = db.Column(db.Text)
-
+    comments = db.relationship("Comment", backref = "post", lazy = "dynamic")
+    
     @staticmethod
     def on_changed_body(target, value, oldvalue, initiator):
         allowed_tags = ["a", "abbr", "acronym", "b", "blockquote", "code",
@@ -285,10 +289,52 @@ class Post(db.Model):
                      timestamp = forgery_py.date.date(True),author = u)
             db.session.add(p)
             db.session.commit()
-       
-                
 db.event.listen(Post.body, "set", Post.on_changed_body)
     
+    
+class Comment(db.Model):
+    __tablename__ = "comments"
+    id = db.Column(db.Integer, primary_key = True)
+    body = db.Column(db.Text)
+    body_html = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime, index = True, default = datetime.utcnow)
+    disabled = db.Column(db.Boolean)
+    author_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    post_id = db.Column(db.Integer, db.ForeignKey("posts.id"))
+    
+    @staticmethod
+    def on_changed_body(target, value, oldvalue, initiator):
+        allowed_tags = ["a", "abbr", "acronym", "b", "code", "em", "i", "strong"]
+        target.body_html = bleach.linkify(bleach.clean(
+                           markdown(value, output_format = "html"),
+                                    tags = allowed_tags, strip = True))
+    @staticmethod
+    def generate_fake(count = 100):
+        import forgery_py
+        from random import randint
+        from sqlalchemy.exc import IntegrityError
+        user_count = User.query.count()
+        post_count = Post.query.count()
+        
+        for i in range(count):
+            u = User.query.offset(randint(0, user_count - 1)).first()
+            p = Post.query.offset(randint(0, post_count - 1)).first()
+            comment = Comment(body = forgery_py.lorem_ipsum.sentences(randint(1, 3)),
+                              timestamp = forgery_py.date.date(True),
+                              author = u,
+                              post = p)
+            db.session.add(comment)
+            try:
+                db.session.commit()
+            except IntegrityError:
+                db.session.rollback()
+        
+        
+db.event.listen(Comment.body, "set", Comment.on_changed_body)
+
+
+
+
 """the callable func to load user"""
 @login_manager.user_loader
 def load_user(user_id):

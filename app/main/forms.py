@@ -14,6 +14,10 @@ class PostForm(FlaskForm):
     body = PageDownField("写点什么吧？", validators=[Required()])
     submit = SubmitField("提交")
     
+class CommentForm(FlaskForm):
+    body = StringField("", validators = [Required()])
+    submit = SubmitField("提交")
+    
 class EditProfileForm(FlaskForm):
     name = StringField("真实姓名", validators=[Length(0, 64)])
     location = StringField("所在地", validators=[Length(0, 64)])
