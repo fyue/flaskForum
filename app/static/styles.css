@@ -77,10 +77,10 @@ div.post-footer {
 .table.followers tr {
     border-bottom: 1px solid #e0e0e0;
 }
-div.post-tabs {
+div.post-tabs, div.page-header {
     margin-top: 16px;
 }
-div.post-tabs ul.posts {
+div.post-tabs ul.posts, div.page-header ul.comments {
     margin: 0px;
     border-top: none;
 }
@@ -95,7 +95,7 @@ ul.comments li.comment {
     border-bottom: 1px solid #e0e0e0;
 }
 ul.comments li.comment:nth-child(1) {
-    border-top: 1px solid #e0e0e0;
+    #border-top: 1px solid #e0e0e0;
 }
 ul.comments li.comment:hover {
     background-color: #f0f0f0;

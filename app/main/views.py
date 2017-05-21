@@ -208,6 +208,19 @@ def moderate():
     return render_template("moderate.html", comments = comments,
                            pagination = pagination, page = page)
     
+@main.route("/moderate/show_forbidden")
+@login_required
+@permission_required(Permissions.MODERATE_COMMENTS)
+def show_forbidden():
+    page = request.args.get("page", 1, type=int)
+    pagination = Comment.query.filter_by(disabled = True).order_by(
+                 Comment.timestamp.desc()).paginate(
+        page, per_page = current_app.config["FLASKY_COMMENTS_PER_PAGE"],
+        error_out = False)
+    comments = pagination.items
+    return render_template("moderate.html", comments = comments,
+                           pagination = pagination, page = page)
+    
 @main.route("/moderate/enable/<int:id>")
 @login_required
 @permission_required(Permissions.MODERATE_COMMENTS)
@@ -241,10 +254,3 @@ def show_followed():
     resp.set_cookie("show_followed", "1", max_age = 30*24*60*60)
     return resp
     
-
-
-
-
-
-
-
