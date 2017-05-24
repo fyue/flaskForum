@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% import "_macros.html" as macros %}
+
+{% block title %}Flask论坛 - 评论管理{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <ul class="nav nav-tabs">
+        <li><a href="{{ url_for(".moderate") }}">管理所有评论</a></li>
+        <li><a href="{{ url_for(".show_forbidden") }}">仅显示已被删除的文章</a></li>
+    </ul>
+    {% set moderate = True %}
+    {% include "_comments.html" %}
+</div>
+{% if pagination %}
+<div class="pagination">
+    {{ macros.pagination_widget(pagination, ".moderate") }}
+</div>
+{% endif %}
+{% endblock %}

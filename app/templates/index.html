@@ -1,21 +1,42 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
 
 {% block title %}Flask论坛{% endblock %}
 
 {% block page_content %}
 <div class="page-header">
-    <h1>你好，{%  if name %}{{ name }}{% else %}Stranger{% endif %}!</h1>
-    {% if not known %}
-    <p>很高兴认识你!</p>
+    <h1>你好，
+    {%  if current_user.is_authenticated %}
+        {{ current_user.username }}
     {% else %}
-    <p>再次遇见你真好！</p>
+        熟悉的陌生人
+    {% endif %}!
+    </h1>
+</div>
+<div>
+    {% if current_user.can(Permissions.WRITE_ARTICLES) %}
+    {{ wtf.quick_form(form) }}
     {% endif %}
 </div>
-
-{{ wtf.quick_form(form) }}
-
-<p>当地时间: {{ moment(current_time).format('LLL') }}.</p>
-<p>上一次访问: {{ moment(current_time).fromNow(refresh=True) }}</p>
+<div class="post-tabs">
+    <ul class="nav nav-tabs">
+        <li{% if not show_followed %} class="active"{% endif %}>
+            <a href="{{ url_for(".show_all") }}">显示所有文章</a></li>
+        {% if current_user.is_authenticated %}
+        <li{% if show_followed %} class="active"{% endif %}>
+            <a href="{{ url_for(".show_followed") }}">显示所关注的用户文章</a></li>
+        {% endif %}
+    </ul>
+    {% include "_posts.html" %}
+</div>
+{% if pagination %}
+<div class="pagination">
+    {{ macros.pagination_widget(pagination, ".index") }}
+</div>
+{% endif %}
 {% endblock %}
-
+{% block scripts %}
+{{ super() }}
+{{ pagedown.include_pagedown() }}
+{% endblock %}
