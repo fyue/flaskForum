@@ -1,5 +1,6 @@
 Flask
 Flask-Bootstrap
+Flask-HTTPAuth
 Flask-Mail
 Flask-Migrate
 Flask-Moment
