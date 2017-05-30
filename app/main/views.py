@@ -8,8 +8,6 @@ from .forms import EditProfileForm, EditProfileAdminForm, PostForm, \
                    CommentForm
 from .. import db
 from ..decorators import admin_required, permission_required
-from flask.helpers import make_response
-from werkzeug import responder
 
 @main.route("/", methods=["GET", "POST"])
 def index():
@@ -253,4 +251,14 @@ def show_followed():
     resp = make_response(redirect(url_for(".index")))
     resp.set_cookie("show_followed", "1", max_age = 30*24*60*60)
     return resp
+
+@main.route("/shutdown")
+def server_shutdown():
+    if not current_app.testing:
+        abort(404)
+    shutdown = request.environ.get("werkzeug.server.shutdown")
+    if not shutdown:
+        abort(500)
+    shutdown()
+    return "shutting down ..."
     
