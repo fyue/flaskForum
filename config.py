@@ -21,6 +21,7 @@ class Config:
     FLASKY_FOLLOWERS_PER_PAGE = os.environ.get("FLASKY_FOLLOWERS_PER_PAGE") or 50
     FLASKY_COMMENTS_PER_PAGE = 30
     FLASKY_SLOW_DB_QUERY_TIME = 0.5
+    
     @staticmethod
     def init_app(app):
         pass
@@ -52,6 +53,29 @@ class TestingConfig(Config):
 class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL") or \
     "mysql://root:ryqbwzy@localhost:3306/product_db"
+    
+    @classmethod
+    def  init_app(cls, app):
+        Config.init_app(app)
+        
+        """send error to admin by email"""
+        import logging
+        from logging.handlers import SMTPHandler
+        credentials = None
+        secure = None
+        if getattr(cls,"MAIL_USERNAME", None) is not None:
+            credentials = (cls.MAIL_USERNAME, cls.MAIL_PASSWORD)
+            if getattr(cls, "MAIL_USE_TLS",None):
+                secure = ()
+        mail_hander = SMTPHandler(
+            mailhost = (cls.MAIL_SERVER, cls.MAIL_PORT),
+            fromaddr = cls.FLASKY_MAIL_SENDER,
+            toaddrs = [cls.FLASKY_ADMIN],
+            subject = cls.FLASKY_MAIL_SUBJECT_PREFIX + "Application Error",
+            credentials = credentials,
+            secure = secure)
+        mail_hander.setLevel(logging.ERROR)
+        app.logger.addHandler(mail_hander)
     
 config = {
     "development": DevelopmentConfig,
