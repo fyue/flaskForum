@@ -6,7 +6,8 @@ class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY") or \
     "my born day is 111111111"
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
-    SQLALCHEMY_TRACK_MODIFICATIONS = True
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_RECORD_QUERIES = True
     MAIL_SERVER = "smtp-mail.outlook.com"
     MAIL_PORT = 587
     MAIL_USE_TLS = True
@@ -19,6 +20,7 @@ class Config:
     FLASKY_POSTS_PER_PAGE = os.environ.get("FLASKY_POSTS_PER_PAGE") or 25
     FLASKY_FOLLOWERS_PER_PAGE = os.environ.get("FLASKY_FOLLOWERS_PER_PAGE") or 50
     FLASKY_COMMENTS_PER_PAGE = 30
+    FLASKY_SLOW_DB_QUERY_TIME = 0.5
     @staticmethod
     def init_app(app):
         pass

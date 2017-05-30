@@ -1,7 +1,7 @@
 from selenium import webdriver
 from app import create_app, db
 from app.models import Role, User, Post
-import threading, re, time, unittest, ipdb
+import threading, re, time, unittest
 
 class SeleniumTestCase(unittest.TestCase):
     client = None
@@ -11,7 +11,6 @@ class SeleniumTestCase(unittest.TestCase):
         """run fierfox"""
         try:
             cls.client = webdriver.Firefox()
-            ipdb.set_trace()
         except:
             pass
         """if can't run client, then skips these tests"""
