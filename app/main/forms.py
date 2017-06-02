@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*- 
+
 from flask_wtf import FlaskForm # The class Form has been renamed with FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, BooleanField, SelectField
 from wtforms import ValidationError

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*- 
+
 from flask import render_template, redirect, request, url_for, flash
 from . import auth
 from .forms import LoginForm, RegistrationForm, ChangePasswordForm, \
@@ -9,7 +11,6 @@ from ..email import send_email
 from flask.helpers import url_for
 from flask.templating import render_template
 from app.auth.forms import ChangePasswordForm
-from email._header_value_parser import Token
 
 
 @auth.route("/login", methods=["GET", "POST"])
