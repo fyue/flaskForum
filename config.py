@@ -82,19 +82,5 @@ config = {
     "developmentQQ":DevelopmentConfigQQ,
     "testing" : TestingConfig,
     "production" : ProductionConfig,
-    "default" : DevelopmentConfig
+    "default" : DevelopmentConfig,
 }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
