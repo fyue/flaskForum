@@ -8,7 +8,7 @@ class Config:
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_RECORD_QUERIES = True
-    SSL_DISABLE = False
+    SSL_DISABLE = True
     MAIL_SERVER = "smtp.qq.com"
     MAIL_PORT = 465
     MAIL_USE_TLS = False

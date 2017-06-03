@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*- 
+
 import unittest
 import re
 from app import create_app, db
@@ -38,7 +40,7 @@ class FlaskClientTestCase(unittest.TestCase):
             "password": "cat"                                                         
         }, follow_redirects = True)
         data = response.get_data(as_text = True)
-        self.assertTrue(re.search(r"你好,\s+john", data))
+        self.assertTrue(re.search(r"john", data))
         self.assertTrue("您还没有验证您的账户" in data)
         
         """send confir_token"""
