@@ -66,7 +66,7 @@ class ProductionConfig(Config):
         mail_hander.setLevel(logging.ERROR)
         app.logger.addHandler(mail_hander)
     
-class HerokuConfig(ProductionConfig):
+class AliyunConfig(ProductionConfig):
     SSL_DISABLE = bool(os.environ.get('SSL_DISABLE'))
 
     @classmethod
@@ -89,5 +89,6 @@ config = {
     "development": DevelopmentConfig,
     "testing" : TestingConfig,
     "production" : ProductionConfig,
-    "default" : DevelopmentConfig
+    "default" : DevelopmentConfig,
+    "aliyun" : AliyunConfig
 }
