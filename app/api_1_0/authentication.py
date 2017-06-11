@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*- 
+
 from flask import jsonify, g
 from flask_httpauth import HTTPBasicAuth
 from ..models import AnonymousUser, User

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*- 
+
 from selenium import webdriver
 from app import create_app, db
 from app.models import Role, User, Post

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*- 
+
 from flask import jsonify, request, current_app, url_for
 from ..models import User, Post
 from . import api
