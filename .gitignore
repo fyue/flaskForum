@@ -105,3 +105,4 @@ my_venv/
 app/__pycache__/email.cpython-35.pyc
 app/main/__pycache__/errors.cpython-35.pyc
 tests/__pycache__/test_basics.cpython-35.pyc
+venv_Flask/
