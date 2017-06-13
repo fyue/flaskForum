@@ -165,6 +165,11 @@ def before_request():
                 and request.endpoint[:5] != "auth." \
                 and request.endpoint != "static":
             return redirect(url_for("auth.unconfirmed"))
-
-
+    """
+    if current_user.is_anonymous \
+            and request.endpoint \
+            and request.endpoint[:5] == "main.":
+        flash("请先登陆再继续！")
+        return redirect(url_for("auth.login"))
+    """
 

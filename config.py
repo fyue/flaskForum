@@ -84,11 +84,28 @@ class AliyunConfig(ProductionConfig):
         file_handler.setLevel(logging.WARNING)
         app.logger.addHandler(file_handler)
 
+class UnixConfig(ProductionConfig):
+    @classmethod
+    def init_app(cls, app):
+        ProductionConfig.init_app(app)
+        
+        """handle proxy server headers"""
+        from werkzeug.contrib.fixers import ProxyFix
+        app.wsgi_app = ProxyFix(app.wsgi_app)
+        
+        """log to syslog"""
+        import logging
+        from logging.handlers import SysLogHandler
+        syslog_hander = SysLogHandler()
+        syslog_hander.setLevel(logging.WARNING)
+        app.logger.addHandler(syslog_hander)
+        
     
 config = {
     "development": DevelopmentConfig,
     "testing" : TestingConfig,
     "production" : ProductionConfig,
     "default" : DevelopmentConfig,
-    "aliyun" : AliyunConfig
+    "aliyun" : AliyunConfig,
+    "unix": UnixConfig
 }
