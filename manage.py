@@ -8,7 +8,7 @@ if os.environ.get("FLASK_COVERAGE"):
     COV = coverage.coverage(branch = True, include = "app/*")
     COV.start()
 
-if os.path.exits(".env"):
+if os.path.exists(".env"):
     print("Importing environment form .env...")
     for line in open(".env"):
         var = line.strip().split("=")

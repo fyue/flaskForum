@@ -6,9 +6,9 @@
 
 {% block page_content %}
 <div class="page-header">
-    <h1>你好,
+    <h1>你好
     {%  if current_user.is_authenticated %}
-        {{ current_user.username }}
+        ,{{ current_user.username }}
     {% else %}
         
     {% endif %}!
