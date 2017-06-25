@@ -8,8 +8,21 @@
     <h1>登陆</h1>
 </div>
 <div class="col-md-4">
-    {{ wtf.quick_form(form) }}
-    <br />
+    <form class="form" method="post" role="form">
+    {{ form.hidden_tag() }}
+    {{ wtf.form_errors(form, hiddens="only") }}
+    
+    {{ wtf.form_field(form.email) }}
+    {{ wtf.form_field(form.password) }}
+    {{ wtf.form_field(form.verification_code) }}
+    <div id="verifyImg">
+        <img src="{{ url_for("static", filename="verifyCode/" + VcodeName) }}" />
+        <a href="#">看不清？换一张！</a>
+    </div>
+    {{ wtf.form_field(form.remember_me) }}
+    {{ wtf.form_field(form.submit) }}
+    </form>
+    <br>
     <p>
         忘记密码？ 点击<a href="{{ url_for("auth.password_reset_request") }}">这里</a>重置
     </p>
@@ -17,4 +30,9 @@
         新用户？<a href="{{ url_for("auth.register") }}">点这里注册</a>.
     </p>
 </div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for("static", filename="scripts/verificationName.js") }}"></script>
 {% endblock %}

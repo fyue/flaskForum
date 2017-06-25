@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*- 
 
-from flask import jsonify, g
+from flask import jsonify, g, session
 from flask_httpauth import HTTPBasicAuth
 from ..models import AnonymousUser, User
-from . import api
+from ..auth import vericodes
 from .errors import forbidden, unauthorized
+from . import api
 
 auth = HTTPBasicAuth()
 
@@ -42,3 +43,9 @@ def get_token():
     return jsonify({"token": g.current_user.generate_auth_token(
                   expiration = 3600), "expiration": 3600})
 
+@api.route("/verifyName")
+def get_verifyName():
+    VcodeTuple = vericodes.generate_verification_code()
+    session["verificationCode"] = VcodeTuple[0]
+    return jsonify({"verifyName": VcodeTuple[1]})
+    

@@ -1,16 +1,14 @@
 # -*- coding: utf-8 -*- 
-
-from flask import render_template, redirect, request, url_for, flash
+from flask import render_template, redirect, request, url_for, flash, session
 from . import auth
 from .forms import LoginForm, RegistrationForm, ChangePasswordForm, \
                    PasswordResetForm, PasswordResetRequestForm, ChangeEmailForm
+from .vericodes import generate_verification_code
 from flask_login import login_user, login_required, logout_user, current_user
 from ..models import User
 from .. import db
 from ..email import send_email
-from flask.helpers import url_for
-from flask.templating import render_template
-from app.auth.forms import ChangePasswordForm
+from markupsafe import Markup
 
 
 @auth.route("/login", methods=["GET", "POST"])
@@ -21,8 +19,10 @@ def login():
         if user is not None and user.verify_password(form.password.data):
             login_user(user, form.remember_me.data)#fetch cookie to client.
             return redirect(request.args.get("next") or url_for("main.index"))
-        flash("无效的用户名或密码.")
-    return render_template("auth/login.html", form=form)
+        flash(Markup("<b>无效的用户名或密码.</b>"))
+    VcodeTuple = generate_verification_code()
+    session["verificationCode"] = VcodeTuple[0]
+    return render_template("auth/login.html", form=form, VcodeName = VcodeTuple[1])
 
 @auth.route("/logout")
 @login_required
@@ -45,7 +45,9 @@ def register():
                                                                    token = token)
         flash("一封确认邮件已发送至您的邮箱，請查收！")
         return redirect(url_for("auth.login"))
-    return render_template("auth/register.html", form=form)
+    VcodeTuple = generate_verification_code()
+    session["verificationCode"] = VcodeTuple[0]
+    return render_template("auth/register.html", form=form, VcodeName = VcodeTuple[1])
 
 """Confirm in client_email."""
 @auth.route("/confirm/<token>")
@@ -92,7 +94,9 @@ def change_password():
             return redirect(url_for("auth.login"))
         else:
             flash("旧密码输入错误.")
-    return render_template("auth/change_password.html", form = form)
+    VcodeTuple = generate_verification_code()
+    session["verificationCode"] = VcodeTuple[0]
+    return render_template("auth/change_password.html", form = form, VcodeName = VcodeTuple[1])
 
 """Reset password support"""
 @auth.route("/reset_password", methods=["GET", "POST"])
@@ -108,7 +112,10 @@ def password_reset_request():
                        user = user, token = token, next = request.args.get("next"))
         flash("重置密码邮件已发送至您的邮箱，請查收.")
         return redirect(url_for("auth.login"))
-    return render_template("auth/reset_password.html", form = form)
+    VcodeTuple = generate_verification_code()
+    session["verificationCode"] = VcodeTuple[0]
+    return render_template("auth/reset_password.html", form = form,
+                           VcodeName = VcodeTuple[1])
 
 @auth.route("/reset_password/<token>", methods=["GET", "POST"])
 def password_reset(token):
@@ -140,16 +147,19 @@ def change_email_request():
             send_email(new_email, "验证您的邮件地址", "auth/email/change_email", 
                                                     user = current_user, token = token)
             flash("一封确认新邮箱地址的邮件已发送至您的邮箱, 請查收.")
-            return redirect(url_for("main.index"))
+            return redirect(url_for("auth.login"))
         else:
             flash("无效的邮箱或密码！")
-    return render_template("auth/change_email.html", form = form)
+    VcodeTuple = generate_verification_code()
+    session["verificationCode"] = VcodeTuple[0]
+    return render_template("auth/change_email.html", form = form, VcodeName = VcodeTuple[1])
 
 @auth.route("/change_email/<token>")
 @login_required
 def change_email(token):
     if current_user.change_email(token):
-        flash("你的邮件地址已成功修改")
+        flash("你的邮件地址已成功修改,请重新登陆.")
+        logout_user()
     else:
         flash("无效请求.")
     return redirect(url_for("main.index"))    
@@ -163,7 +173,8 @@ def before_request():
         if not current_user.confirmed \
                 and request.endpoint \
                 and request.endpoint[:5] != "auth." \
-                and request.endpoint != "static":
+                and request.endpoint != "static" \
+                and request.endpoint != "api.get_verifyName":# fix the unconfirmed account VcodeRequeset receiving a html response ""auth.unconfirmed""
             return redirect(url_for("auth.unconfirmed"))
     """
     if current_user.is_anonymous \

@@ -6,7 +6,7 @@
     margin-left:280px;
 }
 .navbar-backcolor {
-    background-color: #deb887;
+    background-color: #9A32CD;
     border-color: #080808;
 }
 
@@ -119,3 +119,6 @@ div.comment-form {
 div.comment-body i {
     color: red;
 }
+div#verifyImg a {
+    vertical-align: bottom;
+{
