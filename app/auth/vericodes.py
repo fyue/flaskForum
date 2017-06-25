@@ -1,4 +1,4 @@
-import os, random, hashlib, ipdb
+import os, random, hashlib
 from PIL import Image, ImageFont, ImageDraw, ImageFilter
 from datetime import datetime
 from random import seed
