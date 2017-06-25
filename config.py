@@ -22,6 +22,7 @@ class Config:
     FLASKY_FOLLOWERS_PER_PAGE = os.environ.get("FLASKY_FOLLOWERS_PER_PAGE") or 50
     FLASKY_COMMENTS_PER_PAGE = 30
     FLASKY_SLOW_DB_QUERY_TIME = 0.5
+    FLASKY_VERIFIED_FONT = os.environ.get("FLASKY_VERIFIED_FONT") or "DejaVuSerif.ttf"
     
     @staticmethod
     def init_app(app):

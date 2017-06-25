@@ -1,7 +1,8 @@
-import os, random, hashlib
+import os, random, hashlib, ipdb
 from PIL import Image, ImageFont, ImageDraw, ImageFilter
 from datetime import datetime
 from random import seed
+from flask import current_app
 
 def generate_verification_code():
     """random nums or letters"""
@@ -28,7 +29,8 @@ def generate_verification_code():
     image = Image.new("RGB", (width, height), (255, 255, 255))
     
     """create Font instance"""
-    font = ImageFont.truetype("FreeMono.ttf", 24)
+    fontPath = current_app.config["FLASKY_VERIFIED_FONT"]
+    font = ImageFont.truetype(fontPath, 24)
     
     """create Draw instance"""
     draw = ImageDraw.Draw(image)
