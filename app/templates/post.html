@@ -11,6 +11,9 @@
     {{ wtf.quick_form(form) }}
 </div>
 {% endif %}
+{% if current_user.can(Permissions.MODERATE_COMMENTS) %}
+    {% set moderate = True %}
+{% endif %}
 {% include "_comments.html" %}
 {% if pagination %}
 <div class="pagination">

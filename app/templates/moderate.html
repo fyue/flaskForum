@@ -9,7 +9,9 @@
         <li><a href="{{ url_for(".moderate") }}">管理所有评论</a></li>
         <li><a href="{{ url_for(".show_forbidden") }}">仅显示已被删除的文章</a></li>
     </ul>
-    {% set moderate = True %}
+    {% if current_user.can(Permissions.MODERATE_COMMENTS) %}
+        {% set moderate = True %}
+    {% endif %}
     {% include "_comments.html" %}
 </div>
 {% if pagination %}

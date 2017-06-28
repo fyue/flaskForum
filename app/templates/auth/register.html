@@ -17,14 +17,9 @@
         {{ wtf.form_field(form.verification_code) }}
 	    <div id="verifyImg">
 	        <img src="{{ url_for("static", filename="verifyCode/" + VcodeName) }}" />
-	        <a href="#">看不清？换一张！</a>
+	        <a href="###">看不清？换一张！</a>
 	    </div>
         {{ wtf.form_field(form.submit) }}
     </form>
 </div>
-{% endblock %}
-
-{% block scripts %}
-{{ super() }}
-<script src="{{ url_for("static", filename="scripts/verificationName.js") }}"></script>
 {% endblock %}

@@ -50,7 +50,7 @@ def generate_verification_code():
         tmpList.append(eachChar)
 
     """blur it!"""
-    image = image.filter(ImageFilter.SMOOTH_MORE)
+    image = image.filter(ImageFilter.BLUR)
     
     """create verification_code"""
     codeChar = tmpList[0]+tmpList[1]+tmpList[2]+tmpList[3]

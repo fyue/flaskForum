@@ -3,9 +3,10 @@
 from flask import jsonify, request, current_app, g, abort, url_for
 from ..models import Post, Permissions
 from .decorators import permission_required
-from .errors import forbidden
+from .errors import forbidden, unauthorized
 from .. import db
 from . import api
+import ipdb
 
 @api.route("/posts/")
 def get_posts():
@@ -52,3 +53,21 @@ def edit_post(id):
     post.body = request.json.get("body", post.body)
     db.session.add(post)
     return jsonify(post.to_json())
+
+@api.route("/posts/<int:id>/thumbs")
+def post_thumbs(id):
+    ipdb.set_trace()
+    if not g.current_user.is_anonymous and \
+            g.current_user.confirmed:
+        post = Post.query.get_or_404(id)
+        post.thumb_counts += 1
+        db.session.add(post)
+        db.session.commit()
+        return jsonify({"thumbs": post.thumb_counts})
+    else:
+        return unauthorized("请您先登陆")
+    
+    
+    
+    
+    

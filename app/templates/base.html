@@ -77,4 +77,5 @@
 {{ super() }}
 {{ moment.include_moment() }}
 {{ moment.lang('zh-CN') }}
+<script src="{{ url_for("static", filename="scripts/customized.js") }}"></script>
 {% endblock %}

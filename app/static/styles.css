@@ -74,6 +74,11 @@ div.flask-pagedown-preview h3 {
 div.post-footer {
     text-align: right;
 }
+
+div.post-footer span.thumbs_hidden_url {
+    display: none;
+}
+
 .table.followers tr {
     border-bottom: 1px solid #e0e0e0;
 }

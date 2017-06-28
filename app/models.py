@@ -62,6 +62,14 @@ class Follow(db.Model):
                             primary_key = True)
     timestamp = db.Column(db.DateTime, default = datetime.utcnow)
 
+class ThumbsUserPost(db.Model):
+    __tablename__ = "thumbsuserpost"
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"),
+                        primary_key = True)
+    post_id = db.Column(db.Integer, db.ForeignKey("posts.id"),
+                        primary_key = True)
+    timestamp = db.Column(db.DateTime, default = datetime.utcnow)
+    status = db.Column(db.Boolean, default = False)
 
 class User(UserMixin, db.Model):
     __tablename__ = "users"            
@@ -90,6 +98,11 @@ class User(UserMixin, db.Model):
                                 lazy = "dynamic",
                                 cascade = "all, delete-orphan")
 
+    poststhumb = db.relationship("ThumbsUserPost",
+                                 foreign_keys = [ThumbsUserPost.user_id],
+                                 backref = db.backref("user", lazy = "joined"),
+                                 lazy = "dynamic",
+                                 cascade = "all, delete-orphan")
     
     @staticmethod
     def generate_fake(count=100):
@@ -298,6 +311,11 @@ class Post(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     body_html = db.Column(db.Text)
     comments = db.relationship("Comment", backref = "post", lazy = "dynamic")
+    usersthumb = db.relationship("ThumbsUserPost",
+                                 foreign_keys = [ThumbsUserPost.post_id],
+                                 backref = db.backref("post", lazy = "joined"),
+                                 lazy = "dynamic",
+                                 cascade = "all, delete-orphan")
     
     @staticmethod
     def on_changed_body(target, value, oldvalue, initiator):
@@ -337,7 +355,8 @@ class Post(db.Model):
             "timestamp": self.timestamp,
             "author": url_for("api.get_user", id = self.author_id, _external = True),
             "comments": url_for("api.get_post_comments", id = self.id, _external = True),
-            "comment_count": self.comments.count()
+            "comment_count": self.comments.count(),
+            "thumbs": self.thumb_counts
         }
         return json_post
 
@@ -404,8 +423,6 @@ class Comment(db.Model):
         return Comment(body = body)
     
 db.event.listen(Comment.body, "set", Comment.on_changed_body)
-
-
 
 
 """the callable func to load user"""

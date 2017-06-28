@@ -22,6 +22,10 @@
 	            {% endif %}
             </div>
             <div class="post-footer">
+                <a href="###" class="thumbs">
+                    <span class="label label-info thumbs_count">{{ post.thumb_counts }}个赞</span>
+                    <span class="thumbs_hidden_url">{{ url_for("api.post_thumbs", id = post.id) }}</span>
+                </a>
                 <a href="{{ url_for(".post", id = post.id) }}">
                     <span class="label label-primary">分享</span>
                 </a>
