@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*- 
 
 from flask import render_template, abort, flash, redirect, url_for, \
-                  request, current_app, make_response
+                  request, current_app, make_response, jsonify
 from .forms import EditProfileForm, EditProfileAdminForm, PostForm, \
                    CommentForm
 from flask_login import login_required, current_user
@@ -195,6 +195,24 @@ def followed_by(username):
                            endpoint = ".followed_by",
                            pagination = pagination,
                            follows = follows)
+    
+@main.route("/thumbpost/<int:postId>")    
+@login_required
+def thumbPost(postId):
+    post = Post.query.get_or_404(postId)
+    if current_user.is_thumbing_post(post):
+        return jsonify({"wrong": "has_thumbed"})
+    current_user.thumb_post(post)
+    return jsonify({"thumbCounts": post.usersthumb.count()})
+    
+@main.route("/cancelthumb/<int:postId>")
+@login_required
+def cancelThumb(postId):
+    post = Post.query.get_or_404(postId)
+    if not current_user.is_thumbing_post(post):
+        return jsonify({"wrong": "has_not_thumbed"})
+    current_user.cancel_thumb_post(post)
+    return jsonify({"thumbCounts": post.usersthumb.count()})
     
 @main.route("/moderate")
 @login_required

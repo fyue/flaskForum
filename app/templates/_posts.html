@@ -22,10 +22,20 @@
 	            {% endif %}
             </div>
             <div class="post-footer">
+                {% if current_user.is_authenticated %}
                 <a href="###" class="thumbs">
-                    <span class="label label-info thumbs_count">{{ post.thumb_counts }}个赞</span>
-                    <span class="thumbs_hidden_url">{{ url_for("api.post_thumbs", id = post.id) }}</span>
+				{%if not current_user.is_thumbing_post(post) %}
+					<span class="label label-info">点赞</span>
+					<span class="label label-warning thumbs_hidden">取消赞</span>
+				{% else %}
+					<span class="label label-info thumbs_hidden">点赞</span>
+					<span class="label label-warning">取消赞</span>
+				{% endif %}
+					<span class="thumbs_hidden">{{ url_for(".thumbPost", postId = post.id) }}</span>
+					<span class="thumbs_hidden">{{ url_for(".cancelThumb", postId = post.id) }}</span>
                 </a>
+                {% endif %}
+                    <span class="label label-primary">{{ post.usersthumb.count() }}人赞同</span>
                 <a href="{{ url_for(".post", id = post.id) }}">
                     <span class="label label-primary">分享</span>
                 </a>

@@ -227,7 +227,7 @@ class User(UserMixin, db.Model):
         self.last_seen = datetime.utcnow()
         db.session.add(self)
 
-    def gravatar(self, size = 100, rating = "g"):
+    def gravatar(self, size = 50, rating = "g"):
         if request.is_secure:
             url = "https://secure.gravatar.com/avatar"
         else:
@@ -260,6 +260,20 @@ class User(UserMixin, db.Model):
         return Post.query.join(Follow, Follow.followed_id == Post.author_id)\
                          .filter(Follow.follower_id == self.id)
                          
+    """Thumbs"""
+    def thumb_post(self, post):
+        if not self.is_thumbing_post(post):
+            thumb = ThumbsUserPost(user = self, post = post)
+            db.session.add(thumb)
+            
+    def cancel_thumb_post(self, post):
+        thumb = self.poststhumb.filter_by(post_id = post.id).first()
+        if thumb:
+            db.session.delete(thumb)
+            
+    def is_thumbing_post(self, post):
+        return self.poststhumb.filter_by(post_id = post.id).first() is not None
+                            
     """api"""
     def generate_auth_token(self, expiration):
         s = Serializer(current_app.config["SECRET_KEY"],
@@ -355,10 +369,12 @@ class Post(db.Model):
             "timestamp": self.timestamp,
             "author": url_for("api.get_user", id = self.author_id, _external = True),
             "comments": url_for("api.get_post_comments", id = self.id, _external = True),
-            "comment_count": self.comments.count(),
-            "thumbs": self.thumb_counts
+            "comment_count": self.comments.count()
         }
         return json_post
+
+    def __repr__(self):
+        return "<Post %r>" %(self.id)
 
 db.event.listen(Post.body, "set", Post.on_changed_body)
 

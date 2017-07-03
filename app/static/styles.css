@@ -19,6 +19,8 @@ ul.posts {
 ul.posts li.post {
     padding: 8px;
     border-bottom: 1px solid #e0e0e0;
+    border-left: 1px solid #e0e0e0;
+    border-right: 1px solid #e0e0e0;
 }
 ul.posts li.post:hover {
     background-color: #E066FF;
@@ -75,7 +77,7 @@ div.post-footer {
     text-align: right;
 }
 
-div.post-footer span.thumbs_hidden_url {
+div.post-footer span.thumbs_hidden {
     display: none;
 }
 

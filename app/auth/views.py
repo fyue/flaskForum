@@ -114,7 +114,7 @@ def password_reset_request():
         return redirect(url_for("auth.login"))
     VcodeTuple = generate_verification_code()
     session["verificationCode"] = VcodeTuple[0]
-    return render_template("auth/reset_password.html", form = form,
+    return render_template("auth/reset_password_request.html", form = form,
                            VcodeName = VcodeTuple[1])
 
 @auth.route("/reset_password/<token>", methods=["GET", "POST"])

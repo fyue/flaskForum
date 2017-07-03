@@ -1,6 +1,7 @@
-import unittest, time
+import unittest, time, ipdb
 from datetime import datetime
-from app.models import User, Role, AnonymousUser, Permissions, Follow
+from app.models import User, Role, AnonymousUser, Permissions, Follow, \
+ThumbsUserPost, Post
 from app import create_app, db
 from app.auth.views import confirm
 from click.decorators import password_option
@@ -196,7 +197,49 @@ class UserModelTestCase(unittest.TestCase):
         self.assertEqual(sorted(json_user.keys()), sorted(expected_keys))
         self.assertTrue("api/v1.0/users/" in json_user["url"])
         
-            
+    def test_thumbs(self):
+        u1 = User(email = "john@example.com", password = "cat")
+        u2 = User(email='susan@example.org', password='dog')
+        p1 = Post(body="helloworld", author = u1)
+        p2 = Post(body="helloworld", author = u1)
+        
+        db.session.add(u1)
+        db.session.add(u2)
+        db.session.add(p1)
+        db.session.add(p2)
+        db.session.commit()
+        self.assertFalse(u1.is_thumbing_post(p1))
+        
+        u1.thumb_post(p1)
+        u1.thumb_post(p2)
+        u2.thumb_post(p1)
+        db.session.add(u1)
+        db.session.add(u2)
+        db.session.commit()
+        self.assertTrue(u1.is_thumbing_post(p1))
+        self.assertTrue(u2.is_thumbing_post(p1))
+        t = u1.poststhumb.all()[0]
+        self.assertTrue(t.post == p1)
+        t = p1.usersthumb.all()[1]
+        self.assertTrue(t.user == u2)
+        self.assertTrue(p1.usersthumb.count() == 2)
+        self.assertTrue(u1.poststhumb.count() == 2)
+        self.assertTrue(ThumbsUserPost.query.count() == 3)
+        
+        u1.cancel_thumb_post(p1)
+        db.session.add(u1)
+        db.session.commit()
+        self.assertFalse(u1.is_thumbing_post(p1))
+        self.assertTrue(u2.is_thumbing_post(p1))
+        self.assertTrue(p1.usersthumb.count() == 1)
+        self.assertTrue(u1.poststhumb.count() == 1)
+        self.assertTrue(ThumbsUserPost.query.count() == 2)
+        
+        
+        
+        
+        
+        
         
         
         
