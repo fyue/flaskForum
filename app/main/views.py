@@ -14,6 +14,9 @@ from . import main
 @main.route("/", methods=["GET", "POST"])
 def index():
     form = PostForm()
+    if request.method == "POST" and not current_user.can(Permissions.WRITE_ARTICLES):
+        flash("请您先登录！")
+        return redirect(url_for("auth.login"))
     if current_user.can(Permissions.WRITE_ARTICLES) and \
             form.validate_on_submit():
         post = Post(body = form.body.data, 

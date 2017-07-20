@@ -15,9 +15,7 @@
     </h1>
 </div>
 <div>
-    {% if current_user.can(Permissions.WRITE_ARTICLES) %}
     {{ wtf.quick_form(form) }}
-    {% endif %}
 </div>
 <div class="post-tabs">
     <ul class="nav nav-tabs">
