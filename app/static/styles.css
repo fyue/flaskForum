@@ -1,9 +1,8 @@
 .profile-thumbnail {
-    position: absolute;
+    float: right;
 }
 .profile-header {
     min-height: 260px;
-    margin-left:280px;
 }
 .navbar-backcolor {
     background-color: #9A32CD;
