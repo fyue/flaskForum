@@ -7,7 +7,19 @@
 .navbar-backcolor {
     background-color: #9A32CD;
     border-color: #080808;
+    border: 1px solid #f0ad4e
 }
+
+div.navbar div.container a {
+    color: #f0ad4e;
+}
+
+@media (max-width: 767px) {
+    .navbar-inverse .navbar-nav .open .dropdown-menu>li>a {
+        color: #f0ad4e;
+    }
+}
+
 
 ul.posts {
     list-style-type: none;
@@ -45,6 +57,8 @@ div.pagination {
     margin: 0px;
 }
 body {
+    background-image: url(../static/image/blogbgcolor.jpg);
+    background-repeat: repeat-x;
     background-color: #F0FFFF;
 }
 
@@ -83,9 +97,17 @@ div.post-footer span.thumbs_hidden {
 .table.followers tr {
     border-bottom: 1px solid #e0e0e0;
 }
+
 div.post-tabs, div.page-header {
     margin-top: 16px;
+    border-bottom: none;
 }
+
+div.page-header h1 {
+    padding-left: 45px;
+    background: url(../static/image/smile.jpg) no-repeat left center;
+}
+
 div.post-tabs ul.posts, div.page-header ul.comments {
     margin: 0px;
     border-top: none;
