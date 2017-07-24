@@ -14,6 +14,15 @@ div.navbar div.container a {
     color: #f0ad4e;
 }
 
+.nav-tabs>li.active>a {
+    background-color: transparent;
+    border: none;
+}
+
+textarea.form-control {
+    height: 100px;
+}
+
 @media (max-width: 767px) {
     .navbar-inverse .navbar-nav .open .dropdown-menu>li>a {
         color: #f0ad4e;
@@ -25,13 +34,13 @@ ul.posts {
     list-style-type: none;
     padding: 0px;
     margin: 16px 0px 0px 0px;
-    border-top: 1px solid #e0e0e0;
 }
 ul.posts li.post {
     padding: 8px;
-    border-bottom: 1px solid #e0e0e0;
-    border-left: 1px solid #e0e0e0;
-    border-right: 1px solid #e0e0e0;
+    border: 3px solid #af42ca;
+    border-radius: 10px;
+    margin-bottom: 10px;
+
 }
 ul.posts li.post:hover {
     background-color: #E066FF;
@@ -105,7 +114,7 @@ div.post-tabs, div.page-header {
 
 div.page-header h1 {
     padding-left: 45px;
-    background: url(../static/image/smile.jpg) no-repeat left center;
+    background: url(../static/image/smile.png) no-repeat left center;
 }
 
 div.post-tabs ul.posts, div.page-header ul.comments {
@@ -149,4 +158,16 @@ div.comment-body i {
 }
 div#verifyImg a {
     vertical-align: bottom;
-{
+}
+
+div.flask-pagedown-preview, textarea#flask-pagedown-body {
+    border: 1px solid #00ffde;
+    background-color: transparent;
+}
+
+.btn-default {
+    background-color: #00ffde;
+    border-color: transparent;
+}
+
+
