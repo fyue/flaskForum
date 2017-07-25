@@ -1,5 +1,6 @@
 .profile-thumbnail {
     float: right;
+    box-shadow: 3px 3px 6px #666;
 }
 .profile-header {
     min-height: 260px;
@@ -40,6 +41,7 @@ ul.posts li.post {
     border: 3px solid #af42ca;
     border-radius: 10px;
     margin-bottom: 10px;
+    box-shadow: 3px 3px 6px #5bc0de;
 
 }
 ul.posts li.post:hover {
@@ -69,6 +71,8 @@ body {
     background-image: url(../static/image/blogbgcolor.jpg);
     background-repeat: repeat-x;
     background-color: #F0FFFF;
+    font-family: fantasy;
+    font-size: normal;
 }
 
 div.flask-pagedown-preview {
@@ -170,4 +174,26 @@ div.flask-pagedown-preview, textarea#flask-pagedown-body {
     border-color: transparent;
 }
 
+/* link style*/
+a.snow {
+    padding-right: 45px;
+    background: url(../static/image/snow.gif) no-repeat right center;
+}
+
+a[href^="http:"]:link, a[href^="http:"]:visited {
+    text-decoration: none;
+    font-weight: bold;
+    padding-right: 10px;
+    background: url(../static/image/externalLink.gif) no-repeat right top;
+}
+
+a[href^="http:"]:hover, a[href^="http:"]:focus, a[href^="http:"]:active {
+    color: yellow;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+div.post-footer a:hover, div.post-footer a:focus, div.post-footer a:active {
+    text-decoration: none;
+}
 

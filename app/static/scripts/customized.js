@@ -34,6 +34,8 @@ $(function(){
 							$firstEle.show();
 							$firstEle.next().hide();
 						}
+					}else if (data["wrong"] === "has_thumbed"){
+						alert("<h1 class='alert'>请勿重复点赞</h1>")
 					}
 				}
 			})
