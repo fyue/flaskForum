@@ -127,6 +127,30 @@ class User(UserMixin, db.Model):
                 db.session.rollback()
                 
     @staticmethod
+    def generate_thumb_follow_fake(u_count=100, p_count=100):
+        from sqlalchemy.exc import IntegrityError
+        from random import seed, randint
+        import forgery_py
+        
+        user_count = User.query.count()
+        post_count = Post.query.count()
+        for i in range(u_count):
+            u = User.query.offset(randint(0, user_count - 1)).first()
+            for j in range(p_count):
+                p = Post.query.offset(randint(0, post_count - 1)).first()
+                u.thumb_post(p)
+                db.session.add(u)
+            for k in range(u_count):
+                u2 = User.query.offset(randint(0, user_count - 1)).first()
+                u.follow(u2)
+                db.session.add(u)
+            try:
+                db.session.commit()
+            except IntegrityError:
+                db.session.rollback()
+                
+                
+    @staticmethod
     def add_self_follows():
         for user in User.query.all():
             if not user.is_following(user):

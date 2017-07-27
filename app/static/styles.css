@@ -71,8 +71,8 @@ body {
     background-image: url(../static/image/blogbgcolor.jpg);
     background-repeat: repeat-x;
     background-color: #F0FFFF;
-    font-family: fantasy;
-    font-size: normal;
+    font-family: times new roman georgia serif;
+    font-size: 14px;
 }
 
 div.flask-pagedown-preview {
