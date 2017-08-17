@@ -134,6 +134,7 @@ class User(UserMixin, db.Model):
         
         user_count = User.query.count()
         post_count = Post.query.count()
+        seed()
         for i in range(u_count):
             u = User.query.offset(randint(0, user_count - 1)).first()
             for j in range(p_count):

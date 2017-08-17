@@ -13,7 +13,7 @@ class NameForm(FlaskForm):
     submit = SubmitField("提交")
     
 class PostForm(FlaskForm):
-    body = PageDownField("Share your thoughts here!(请使用markdown语法)", validators=[Required("您什么都没写呢？")])
+    body = PageDownField("Share your thoughts here!(markdown availabel!)", validators=[Required("您什么都没写呢？")])
     submit = SubmitField("提交")
     
 class CommentForm(FlaskForm):

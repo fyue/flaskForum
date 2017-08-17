@@ -68,11 +68,7 @@ div.pagination {
     margin: 0px;
 }
 body {
-    background-image: url(../static/image/blogbgcolor.jpg);
-    background-repeat: repeat-x;
     background-color: #F0FFFF;
-    font-family: times new roman georgia serif;
-    font-size: 14px;
 }
 
 div.flask-pagedown-preview {
@@ -114,11 +110,6 @@ div.post-footer span.thumbs_hidden {
 div.post-tabs, div.page-header {
     margin-top: 16px;
     border-bottom: none;
-}
-
-div.page-header h1 {
-    padding-left: 45px;
-    background: url(../static/image/smile.png) no-repeat left center;
 }
 
 div.post-tabs ul.posts, div.page-header ul.comments {
@@ -180,7 +171,7 @@ a.snow {
     background: url(../static/image/snow.gif) no-repeat right center;
 }
 
-a[href^="http:"]:link, a[href^="http:"]:visited {
+a[href^="http"]:link, a[href^="http:"]:visited {
     text-decoration: none;
     font-weight: bold;
     padding-right: 10px;
@@ -197,3 +188,6 @@ div.post-footer a:hover, div.post-footer a:focus, div.post-footer a:active {
     text-decoration: none;
 }
 
+div#footer {
+    text-align: center;
+}

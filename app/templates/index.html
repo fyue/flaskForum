@@ -6,7 +6,7 @@
 
 {% block page_content %}
 <div class="page-header">
-    <h1>你好
+    <h1>Hello
     {%  if current_user.is_authenticated %}
         ,{{ current_user.username }}
     {% else %}
@@ -33,6 +33,13 @@
     {{ macros.pagination_widget(pagination, ".index") }}
 </div>
 {% endif %}
+{% endblock %}
+{% block page_footer %}
+<div id="footer">
+    <h1>About</h1>
+    <p>This page was written by author <a href="{{ url_for(".user", username="Admin") }}">Admin</a> only for learning flask and web development.</p>
+    <p>Thanks Miguel Grinberg and his book 《The flask web development》 !</p>
+</div>
 {% endblock %}
 {% block scripts %}
 {{ super() }}
