@@ -294,3 +294,7 @@ def after_request(response):
                 % (query.statement, query.parameters, query.duration,
                    query.context))
     return response
+
+@main.route("/demo1_candys")
+def demo1():
+    return render_template("demo1_candys.html")

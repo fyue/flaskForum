@@ -191,3 +191,13 @@ div.post-footer a:hover, div.post-footer a:focus, div.post-footer a:active {
 div#footer {
     text-align: center;
 }
+
+@font-face {
+    font-family: "Prelude";
+    src: url(../static/font/preludeflf-webfont.woff);
+}
+
+a.navbar-brand.snow {
+    font-family: Prelude;
+    font-size: 180%;
+}
