@@ -191,7 +191,7 @@ div.post-footer a:hover, div.post-footer a:focus, div.post-footer a:active {
 div#footer {
     text-align: center;
 }
-
+/* font style */
 @font-face {
     font-family: "Prelude";
     src: url(../static/font/preludeflf-webfont.woff);
@@ -200,4 +200,17 @@ div#footer {
 a.navbar-brand.snow {
     font-family: Prelude;
     font-size: 180%;
+}
+
+/*css3 animated*/
+#comments:target {
+    padding-left: 15px;
+    background-color: hsla(180, 70%, 60%, .2);
+    text-shadow: 1px 1px 2px #fff;
+}
+
+#comments {
+    font-size: 150%;
+    transition: background-color 1s ease-out,
+                padding-left .5s ease-out;
 }
