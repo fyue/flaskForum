@@ -1,3 +1,3 @@
 # flaskForum
 
-#flaskForum is now just a personal blog!!!
+#flaskblog is a blog for learning and sharing web techs.
